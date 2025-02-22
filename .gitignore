@@ -1,0 +1,7 @@
+__pycache__/
+*.log
+venv/
+secrets/
+config/*.conf
+addons/
+odoo-db-data/

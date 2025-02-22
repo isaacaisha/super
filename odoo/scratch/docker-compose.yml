@@ -1,0 +1,92 @@
+#version: '3.1'
+
+services:
+  db:
+    image: postgres:latest
+    container_name: odoo-db
+    environment:
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
+      - POSTGRES_DB=postgres
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - odoo-db-data:/var/lib/postgresql/data/pgdata
+    networks:
+      - odoo-network
+    secrets:
+      - postgresql_password
+    restart: always
+
+  odoo16:
+    image: odoo:16.0
+    container_name: odoo16-web
+    environment:
+      - HOST=odoo-db
+      - USER=odoo
+      - PASSWORD_FILE=/run/secrets/postgresql_password
+      - DB_NAME=odoo16  # Unique database name for Odoo 16
+    ports:
+      - "8016:8069"
+    volumes:
+      - odoo16-web-data:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+    networks:
+      - odoo-network
+    secrets:
+      - postgresql_password
+    restart: always
+
+  odoo17:
+    image: odoo:17.0
+    container_name: odoo17-web
+    environment:
+      - HOST=odoo-db
+      - USER=odoo
+      - PASSWORD_FILE=/run/secrets/postgresql_password
+      - DB_NAME=odoo17  # Unique database name for Odoo 17
+    ports:
+      - "8017:8069"
+    volumes:
+      - odoo17-web-data:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+    networks:
+      - odoo-network
+    secrets:
+      - postgresql_password
+    restart: always
+
+  odoo18:
+    image: odoo:latest
+    container_name: odoo18-web
+    environment:
+      - HOST=odoo-db
+      - USER=odoo
+      - PASSWORD_FILE=/run/secrets/postgresql_password
+      - DB_NAME=odoo18  # Unique database name for Odoo 18
+    ports:
+      - "8018:8069"
+    volumes:
+      - odoo18-web-data:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+    networks:
+      - odoo-network
+    secrets:
+      - postgresql_password
+    restart: always
+
+volumes:
+  odoo-db-data:
+  odoo16-web-data:
+  odoo17-web-data:
+  odoo18-web-data:
+
+secrets:
+  postgresql_password:
+    file: odoo_pg_pass
+
+networks:
+  odoo-network:
+    driver: bridge
