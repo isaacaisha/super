@@ -1,6 +1,37 @@
-#version: '3.1'
+#version: '3.7'
 
 services:
+  # --- Reverse Proxy & SSL ---
+  nginx-proxy:
+    image: jwilder/nginx-proxy:latest
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs:ro
+      - ./vhost.d:/etc/nginx/vhost.d
+      - ./html:/usr/share/nginx/html
+    networks:
+      - odoo-network
+    restart: always
+
+  letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion:latest
+    container_name: nginx-letsencrypt
+    environment:
+      - NGINX_PROXY_CONTAINER=nginx-proxy
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./certs:/etc/nginx/certs:rw
+      - ./vhost.d:/etc/nginx/vhost.d
+      - ./html:/usr/share/nginx/html
+    networks:
+      - odoo-network
+    restart: always
+
+  # --- Application Stack ---
   db:
     image: postgres:latest
     container_name: odoo-db
@@ -21,10 +52,14 @@ services:
     image: odoo:16.0
     container_name: odoo16-web
     environment:
+      - VIRTUAL_PORT=8069
       - HOST=odoo-db
       - USER=odoo
       - PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=odoo16  # Unique database name for Odoo 16
+      - DB_NAME=odoo16
+      - VIRTUAL_HOST=v16.super.copromanager.pro
+      - LETSENCRYPT_HOST=v16.super.copromanager.pro
+      - LETSENCRYPT_EMAIL=dbtevolution@gmail.com
     ports:
       - "8016:8069"
     volumes:
@@ -41,10 +76,14 @@ services:
     image: odoo:17.0
     container_name: odoo17-web
     environment:
+      - VIRTUAL_PORT=8069
       - HOST=odoo-db
       - USER=odoo
       - PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=odoo17  # Unique database name for Odoo 17
+      - DB_NAME=odoo17
+      - VIRTUAL_HOST=v17.super.copromanager.pro
+      - LETSENCRYPT_HOST=v17.super.copromanager.pro
+      - LETSENCRYPT_EMAIL=dbtevolution@gmail.com
     ports:
       - "8017:8069"
     volumes:
@@ -61,10 +100,14 @@ services:
     image: odoo:latest
     container_name: odoo18-web
     environment:
+      - VIRTUAL_PORT=8069
       - HOST=odoo-db
       - USER=odoo
       - PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=odoo18  # Unique database name for Odoo 18
+      - DB_NAME=odoo18
+      - VIRTUAL_HOST=super.copromanager.pro,www.super.copromanager.pro
+      - LETSENCRYPT_HOST=super.copromanager.pro,www.super.copromanager.pro
+      - LETSENCRYPT_EMAIL=dbtevolution@gmail.com
     ports:
       - "8018:8069"
     volumes:

@@ -81,3 +81,7 @@ itra-emub-73eb
 34s5-5ajz-sjin
 <!-- Super Password odoo16 -->
 
+sudo nano /etc/nginx/nginx.conf
+
+docker-compose logs nginx-proxy
+docker-compose logs nginx-letsencrypt

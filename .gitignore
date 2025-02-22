@@ -5,3 +5,4 @@ secrets/
 config/*.conf
 addons/
 odoo-db-data/
+odoo/odoo/certs/
