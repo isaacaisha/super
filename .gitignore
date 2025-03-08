@@ -2,7 +2,11 @@ __pycache__/
 *.log
 venv/
 secrets/
-config/*.conf
 addons/
-odoo-db-data/
 odoo/odoo/certs/
+
+config/*.conf
+odoo/odoo/config/odoo.conf
+odoo/odoo/odoo_pg_pass
+odoo/scratch/config/odoo.conf
+odoo/scratch/odoo_pg_pass
