@@ -22,6 +22,7 @@ services:
     container_name: nginx-letsencrypt
     environment:
       - NGINX_PROXY_CONTAINER=nginx-proxy
+      - LETSENCRYPT_STAGE=1 
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./certs:/etc/nginx/certs:rw
@@ -60,8 +61,7 @@ services:
       - VIRTUAL_HOST=v16.super.copromanager.pro
       - LETSENCRYPT_HOST=v16.super.copromanager.pro
       - LETSENCRYPT_EMAIL=dbtevolution@gmail.com
-    ports:
-      - "8016:8069"
+      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
     volumes:
       - odoo16-web-data:/var/lib/odoo
       - ./config:/etc/odoo
@@ -84,8 +84,7 @@ services:
       - VIRTUAL_HOST=v17.super.copromanager.pro
       - LETSENCRYPT_HOST=v17.super.copromanager.pro
       - LETSENCRYPT_EMAIL=dbtevolution@gmail.com
-    ports:
-      - "8017:8069"
+      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
     volumes:
       - odoo17-web-data:/var/lib/odoo
       - ./config:/etc/odoo
@@ -108,10 +107,32 @@ services:
       - VIRTUAL_HOST=super.copromanager.pro,www.super.copromanager.pro
       - LETSENCRYPT_HOST=super.copromanager.pro,www.super.copromanager.pro
       - LETSENCRYPT_EMAIL=dbtevolution@gmail.com
-    ports:
-      - "8018:8069"
+      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
     volumes:
       - odoo18-web-data:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+    networks:
+      - odoo-network
+    secrets:
+      - postgresql_password
+    restart: always
+
+  odoo_latest:
+    image: odoo:latest
+    container_name: odoo-latest-web
+    environment:
+      - VIRTUAL_PORT=8069
+      - HOST=odoo_db
+      - USER=odoo
+      - PASSWORD_FILE=/run/secrets/postgresql_password
+      - DB_NAME=odoo_latest
+      - VIRTUAL_HOST=gestion.copromanager.pro,www.gestion.copromanager.pro
+      - LETSENCRYPT_HOST=gestion.copromanager.pro,www.gestion.copromanager.pro
+      - LETSENCRYPT_EMAIL=dbtevolution@gmail.com
+      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
+    volumes:
+      - odoo-latest-web-data:/var/lib/odoo
       - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
     networks:
@@ -125,6 +146,7 @@ volumes:
   odoo16-web-data:
   odoo17-web-data:
   odoo18-web-data:
+  odoo-latest-web-data:
 
 secrets:
   postgresql_password:

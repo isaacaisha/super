@@ -1,92 +1,138 @@
-#version: '3.1'
+#version: '3.7'
 
 services:
   db:
     image: postgres:latest
-    container_name: odoo-db
+    container_name: odoo-db-local
     environment:
       - POSTGRES_USER=odoo
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
       - POSTGRES_DB=postgres
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - odoo-db-data:/var/lib/postgresql/data/pgdata
+      - odoo-db-data-local:/var/lib/postgresql/data/pgdata
     networks:
-      - odoo-network
+      - odoo-network-local
     secrets:
       - postgresql_password
     restart: always
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo -d postgres"]
+      interval: 10s
+      retries: 5
+      timeout: 5s
 
   odoo16:
     image: odoo:16.0
-    container_name: odoo16-web
+    container_name: odoo16-web-local
     environment:
-      - HOST=odoo-db
-      - USER=odoo
-      - PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=odoo16  # Unique database name for Odoo 16
+      - VIRTUAL_PORT=8069
+      - HOST=odoo-db-local
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
+      - DB_NAME=odoo16
+      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
     ports:
       - "8016:8069"
     volumes:
-      - odoo16-web-data:/var/lib/odoo
+      - odoo16-web-data-local:/var/lib/odoo
       - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
     networks:
-      - odoo-network
+      - odoo-network-local
     secrets:
       - postgresql_password
     restart: always
+    depends_on:
+      db:
+        condition: service_healthy
 
   odoo17:
     image: odoo:17.0
-    container_name: odoo17-web
+    container_name: odoo17-web-local
     environment:
-      - HOST=odoo-db
-      - USER=odoo
-      - PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=odoo17  # Unique database name for Odoo 17
+      - VIRTUAL_PORT=8069
+      - HOST=odoo-db-local
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
+      - DB_NAME=odoo17
+      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
     ports:
       - "8017:8069"
     volumes:
-      - odoo17-web-data:/var/lib/odoo
+      - odoo17-web-data-local:/var/lib/odoo
       - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
     networks:
-      - odoo-network
+      - odoo-network-local
     secrets:
       - postgresql_password
     restart: always
+    depends_on:
+      db:
+        condition: service_healthy
 
   odoo18:
     image: odoo:latest
-    container_name: odoo18-web
+    container_name: odoo18-web-local
     environment:
-      - HOST=odoo-db
-      - USER=odoo
-      - PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=odoo18  # Unique database name for Odoo 18
+      - VIRTUAL_PORT=8069
+      - HOST=odoo-db-local
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
+      - DB_NAME=odoo18
+      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
     ports:
       - "8018:8069"
     volumes:
-      - odoo18-web-data:/var/lib/odoo
+      - odoo18-web-data-local:/var/lib/odoo
       - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
     networks:
-      - odoo-network
+      - odoo-network-local
     secrets:
       - postgresql_password
     restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+
+  odoo_latest:
+    image: odoo:latest
+    container_name: odoo-latest-web-local
+    environment:
+      - VIRTUAL_PORT=8069
+      - HOST=odoo-db-local
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
+      - DB_NAME=odoo_latest
+      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
+    ports:
+      - "8011:8069"
+    volumes:
+      - odoo-latest-web-data-local:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+    networks:
+      - odoo-network-local
+    secrets:
+      - postgresql_password
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
-  odoo-db-data:
-  odoo16-web-data:
-  odoo17-web-data:
-  odoo18-web-data:
+  odoo-db-data-local:
+  odoo16-web-data-local:
+  odoo17-web-data-local:
+  odoo18-web-data-local:
+  odoo-latest-web-data-local:
 
 secrets:
   postgresql_password:
     file: odoo_pg_pass
 
 networks:
-  odoo-network:
+  odoo-network-local:
     driver: bridge
