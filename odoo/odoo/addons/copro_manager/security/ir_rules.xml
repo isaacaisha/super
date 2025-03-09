@@ -1,0 +1,35 @@
+<!-- /home/siisi/super/odoo/odoo/addons/copro_manager/security/ir_rules.xml -->
+
+<odoo>
+  <data noupdate="1">
+    <!-- Syndic Data Rule: Syndics can only see and interact with their own data -->
+    <record id="copro_syndic_rule" model="ir.rule">
+      <field name="name">Syndic Data Rule</field>
+      <field name="model_id" ref="model_copro_syndic"/>
+      <field name="domain_force">[('user_id', '=', user.id)]</field>
+      <field name="groups" eval="[(6, 0, [ref('copro_manager.group_syndic')])]"/>
+    </record>
+
+    <!-- Copropriétaire Data Rule: Copropriétaires can only view (and not modify) their own data -->
+    <record id="copro_coproprietaire_rule" model="ir.rule">
+      <field name="name">Copropriétaire Data Rule</field>
+      <field name="model_id" ref="model_copro_coproprietaire"/>
+      <field name="domain_force">[('user_id', '=', user.id)]</field>
+      <field name="groups" eval="[(6, 0, [ref('copro_manager.group_coproprietaire')])]"/>
+      <field name="perm_write" eval="False"/>
+      <field name="perm_create" eval="False"/>
+      <field name="perm_unlink" eval="False"/>
+    </record>
+
+    <!-- Prestataire Data Rule: Prestataires can only view (and not modify) their own data -->
+    <record id="copro_prestataire_rule" model="ir.rule">
+      <field name="name">Prestataire Data Rule</field>
+      <field name="model_id" ref="model_copro_prestataire"/>
+      <field name="domain_force">[('user_id', '=', user.id)]</field>
+      <field name="groups" eval="[(6, 0, [ref('copro_manager.group_prestataire')])]"/>
+      <field name="perm_write" eval="False"/>
+      <field name="perm_create" eval="False"/>
+      <field name="perm_unlink" eval="False"/>
+    </record>
+  </data>
+</odoo>

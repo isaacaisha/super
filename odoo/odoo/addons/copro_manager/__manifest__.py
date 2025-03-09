@@ -1,0 +1,29 @@
+# /home/siisi/super/odoo/odoo/addons/copro_manager/__manifest__.py
+
+{
+    'name': 'Copro Manager',
+    'version': '1.0',
+    'category': 'Property Management',
+    'summary': 'Gestion des copropriétés avec rôles et permissions',
+    'author': 'Requin Tibùron',
+    'website': 'http://gestion.copromanager.pro/web/login',
+    'depends': ['base', 'mail'],
+    'data': [
+        'security/groups.xml',
+        'security/ir_rules.xml',
+        'security/ir.model.access.csv',
+        'views/menus.xml',
+        'views/superadmin_views.xml',
+        'views/syndic_views.xml',
+        'views/coproprietaire_views.xml',
+        'views/prestataire_views.xml',
+        'views/license_views.xml',
+        'views/residence_views.xml',
+        'data/superadmin_data.xml',
+        'data/syndic_data.xml',
+        'data/coproprietaire_data.xml',
+    ],
+    'images': ['static/description/shark.png'],
+    'installable': True,
+    'application': True,
+}

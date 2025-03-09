@@ -1,8 +1,9 @@
+# /home/siisi/super/.gitignore
+
 __pycache__/
 *.log
 venv/
 secrets/
-addons/
 odoo/odoo/certs/
 
 config/*.conf

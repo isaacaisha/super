@@ -1,0 +1,40 @@
+<!-- /home/siisi/super/odoo/scratch/addons/copro_manager/views/superadmin_views.xml -->
+
+<odoo>
+    <!-- List view for Superadmins (filtered to system users) -->
+    <record id="view_superadmin_list" model="ir.ui.view">
+        <field name="name">superadmin.list</field>
+        <!--<field name="model">res.users</field>-->
+        <field name="model">copro.superadmin</field>
+        <field name="type">list</field>
+        <field name="arch" type="xml">
+            <list string="Superadmins">
+                <field name="image" widget="image"/>
+                <field name="user_id" widget="many2one_avatar"/>
+                <field name="name"/>
+                <field name="email"/>
+                <field name="user_id" string="Utilisateur"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form view for Superadmins -->
+    <record id="view_superadmin_form" model="ir.ui.view">
+        <field name="name">superadmin.form</field>
+        <field name="model">copro.superadmin</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="Superadmin">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="email"/>
+                        <field name="password"/>
+                        <field name="login"/>
+                        <field name="groups_id" widget="many2many_tags"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

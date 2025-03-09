@@ -1,0 +1,35 @@
+<!-- /home/siisi/super/odoo/scratch/addons/copro_manager/views/license_views.xml -->
+
+<odoo>
+    <!-- List view for Licenses -->
+    <record id="view_license_list" model="ir.ui.view">
+        <field name="name">license.list</field>
+        <field name="model">copro.license</field>
+        <field name="type">list</field>
+        <field name="arch" type="xml">
+            <list string="Licenses">
+                <field name="name"/>
+                <field name="start_at"/>
+                <field name="end_at"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form view for Licenses -->
+    <record id="view_license_form" model="ir.ui.view">
+        <field name="name">license.form</field>
+        <field name="model">copro.license</field>
+        <field name="type">form</field>
+        <field name="arch" type="xml">
+            <form string="License">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="start_at"/>
+                        <field name="end_at"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

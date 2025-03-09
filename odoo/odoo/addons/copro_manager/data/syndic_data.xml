@@ -1,0 +1,27 @@
+<!-- /home/siisi/super/odoo/odoo/addons/copro_manager/data/syndic_data.xml -->
+
+<odoo>
+    <!-- Define the group 'group_syndic' -->
+    <record id="group_syndic" model="res.groups">
+        <field name="name">Syndic</field>
+        <field name="category_id" ref="copro_manager.group_syndic"/>
+    </record>
+
+    <!-- Define Syndic Alpha -->
+    <record id="syndic_1" model="copro.syndic">
+        <field name="name">Syndic Alpha</field>
+        <field name="email">alpha@syndic.com</field>
+        <field name="phone">+123456789</field>
+        <!-- Reference the default superadmin -->
+        <field name="superadmin_id" ref="copro_manager.default_superadmin"/>
+    </record>
+
+    <!-- Define Syndic Beta -->
+    <record id="syndic_2" model="copro.syndic">
+        <field name="name">Syndic Beta</field>
+        <field name="email">beta@syndic.com</field>
+        <field name="phone">+987654321</field>
+        <!-- Reference the default superadmin -->
+        <field name="superadmin_id" ref="copro_manager.default_superadmin"/>
+    </record>
+</odoo>

@@ -1,0 +1,18 @@
+<!-- /home/siisi/super/odoo/scratch/addons/copro_manager/views/coproprietaire_data.xml -->
+
+<odoo>
+    <!-- Define the group 'group_coproprietaire' -->
+    <record id="group_coproprietaire" model="res.groups">
+        <field name="name">Copropriétaire</field>
+        <field name="category_id" ref="copro_manager.group_coproprietaire"/>
+    </record>
+
+    <!-- Define Copropriétaire John Doe -->
+    <record id="copro_1" model="copro.coproprietaire">
+        <field name="name">John Doe</field>
+        <field name="email">john@copro.com</field>
+        <field name="phone">+543219876</field>
+        <field name="address">127, rue du la Gloire</field>
+        <field name="syndic_id" ref="copro_manager.syndic_1"/>
+    </record>
+</odoo>
