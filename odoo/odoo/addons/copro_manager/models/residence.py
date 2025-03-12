@@ -31,11 +31,11 @@ class Residence(models.Model):
         tracking=True
     )
     superadmin_ids = fields.Many2many(
-        'copro.superadmin',
+        'res.users',
         string='Super Admins',
         relation='residence_superadmin_rel',
         column1='residence_id',
-        column2='superadmin_id',
+        column2='user_id',
         tracking=True
     )
     created_by = fields.Many2one(

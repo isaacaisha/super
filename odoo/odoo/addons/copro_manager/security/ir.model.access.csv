@@ -1,5 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_superadmin_user,access.superadmin,copro_manager.model_copro_superadmin,copro_manager.group_superadmin,1,1,1,1
 access_syndic_user,access.syndic,copro_manager.model_copro_syndic,copro_manager.group_syndic,1,1,1,1
 access_copro_residence_superadmin,access.residence,copro_manager.model_copro_residence,copro_manager.group_superadmin,1,1,1,1
 access_copro_residence_syndic,access.residence,copro_manager.model_copro_residence,copro_manager.group_syndic,1,1,1,1
@@ -7,4 +6,8 @@ access_coproprietaire_user,access.coproprietaire,copro_manager.model_copro_copro
 access_coproprietaire_syndic,access.coproprietaire,copro_manager.model_copro_coproprietaire,copro_manager.group_syndic,1,1,1,1
 access_prestataire_user,access.prestataire,copro_manager.model_copro_prestataire,copro_manager.group_prestataire,1,0,0,0
 access_prestataire_syndic,access.prestataire,copro_manager.model_copro_prestataire,copro_manager.group_syndic,1,1,1,1
-access_license_user,access.license,copro_manager.model_copro_license,copro_manager.group_superadmin,1,1,1,1
+access_license_user,access.license,copro_manager.model_copro_license,,1,1,1,1
+access_coproprietaire_superadmin,access.coproprietaire.superadmin,copro_manager.model_copro_coproprietaire,,1,1,1,1
+access_syndic_superadmin,access.syndic.superadmin,copro_manager.model_copro_syndic,,1,1,1,1
+access_residence_superadmin,access.residence.superadmin,copro_manager.model_copro_residence,,1,1,1,1
+access_prestataire_superadmin,access.prestataire.superadmin,copro_manager.model_copro_prestataire,,1,1,1,1

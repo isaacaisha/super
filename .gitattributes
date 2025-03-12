@@ -1,3 +1,5 @@
+# /home/siisi/super/.gitattributes
+
 config/* binary
 addons/* binary
 odoo-db-data/* binary

@@ -1,6 +1,8 @@
 # /home/siisi/super/odoo/scratch/addons/copro_manager/models/license.py
 
 from odoo import models, fields, api
+from odoo.exceptions import AccessError
+
 
 class Licence(models.Model):
     _name = "copro.license"
@@ -16,8 +18,7 @@ class Licence(models.Model):
 
     @api.model
     def create(self, vals):
-        # Ensure only superadmins can assign licenses
-        if self.env.user not in self.env.ref('copro_manager.group_superadmin').users:
-            raise AccessError("Only superadmins can assign a license.")
-        
+        # Allow any Odoo superuser to create a license
+        if not self.env.user._is_superuser():
+            raise AccessError("Only an Odoo superuser can assign a license.")
         return super(Licence, self).create(vals)

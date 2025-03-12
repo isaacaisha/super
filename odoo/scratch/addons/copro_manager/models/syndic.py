@@ -14,7 +14,6 @@ class Syndic(models.Model):
     address = fields.Text(string="Adresse")
 
     license_id = fields.Many2one('copro.license', string="License", ondelete='set null')
-    superadmin_id = fields.Many2one('copro.superadmin', string="Superadmin", required=True)
     user_id = fields.Many2one('res.users', string="User Account", ondelete='set null')
 
     residence_ids = fields.Many2many(
@@ -28,20 +27,12 @@ class Syndic(models.Model):
     @api.model
     def create(self, vals):
         if vals.get('email'):
-            # Ensure a SuperAdmin is assigned
-            if not vals.get('superadmin_id'):
-                default_superadmin = self.env['copro.superadmin'].search([], limit=1)
-                if default_superadmin:
-                    vals['superadmin_id'] = default_superadmin.id
-                else:
-                    raise ValueError("No SuperAdmin found. Please create a SuperAdmin before creating a Syndic.")
-            
             user_vals = {
                 'name': vals.get('name'),
                 'login': vals.get('email'),
                 'email': vals.get('email'),
                 'password': 'siisi321',
-                # Assign both the base internal user group and your custom group
+                # Assign both the base internal user group and the syndic group
                 'groups_id': [(6, 0, [
                     self.env.ref('base.group_user').id,
                     self.env.ref('copro_manager.group_syndic').id

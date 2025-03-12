@@ -1,157 +1,253 @@
-#version: '3.7'
+# /home/siisi/super/odoo/odoo/docker-compose.yml
 
 services:
   # --- Reverse Proxy & SSL ---
   nginx-proxy:
     image: jwilder/nginx-proxy:latest
-    container_name: nginx-proxy
+    container_name: nginx-proxy-super
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - /var/run/docker.sock:/tmp/docker.sock:ro
-      - ./certs:/etc/nginx/certs:ro
+      - ./certs:/etc/nginx/certs:rw
       - ./vhost.d:/etc/nginx/vhost.d
       - ./html:/usr/share/nginx/html
     networks:
-      - odoo-network
+      - super-network
     restart: always
 
   letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion:latest
-    container_name: nginx-letsencrypt
+    container_name: nginx-letsencrypt-super
+    depends_on:
+      - nginx-proxy
     environment:
-      - NGINX_PROXY_CONTAINER=nginx-proxy
-      - LETSENCRYPT_STAGE=1 
+      - NGINX_PROXY_CONTAINER=nginx-proxy-super
+      - DEFAULT_EMAIL=medusadbt@gmail.com
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./certs:/etc/nginx/certs:rw
       - ./vhost.d:/etc/nginx/vhost.d
       - ./html:/usr/share/nginx/html
     networks:
-      - odoo-network
+      - super-network
     restart: always
 
-  # --- Application Stack ---
+  # --- Database ---
   db:
     image: postgres:latest
-    container_name: odoo-db
+    container_name: odoo-db-super
     environment:
       - POSTGRES_USER=odoo
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
       - POSTGRES_DB=postgres
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - odoo-db-data:/var/lib/postgresql/data/pgdata
+      - odoo-db-data-super:/var/lib/postgresql/data/pgdata
+      - ./odoo_pg_pass:/run/secrets/postgresql_password:ro
     networks:
-      - odoo-network
-    secrets:
-      - postgresql_password
+      - super-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U odoo"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     restart: always
 
+  # --- Odoo Services ---
   odoo16:
     image: odoo:16.0
     container_name: odoo16-web
     environment:
+      - VIRTUAL_HOST=v6.sup.copromanager.pro
+      - LETSENCRYPT_HOST=v6.sup.copromanager.pro
       - VIRTUAL_PORT=8069
-      - HOST=odoo-db
+      - VIRTUAL_PROTO=http
+      - HOST=odoo-db-super
       - USER=odoo
       - PASSWORD_FILE=/run/secrets/postgresql_password
       - DB_NAME=odoo16
-      - VIRTUAL_HOST=v16.super.copromanager.pro
-      - LETSENCRYPT_HOST=v16.super.copromanager.pro
-      - LETSENCRYPT_EMAIL=dbtevolution@gmail.com
       - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
     volumes:
       - odoo16-web-data:/var/lib/odoo
       - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
+      - ./logs:/var/log/odoo/odoo/logs
+      - ./odoo_pg_pass:/run/secrets/postgresql_password:ro
     networks:
-      - odoo-network
-    secrets:
-      - postgresql_password
+      - super-network
+    depends_on:
+      db:
+        condition: service_healthy
     restart: always
 
   odoo17:
     image: odoo:17.0
     container_name: odoo17-web
     environment:
+      - VIRTUAL_HOST=v7.sup.copromanager.pro
+      - LETSENCRYPT_HOST=v7.sup.copromanager.pro
       - VIRTUAL_PORT=8069
-      - HOST=odoo-db
+      - VIRTUAL_PROTO=http
+      - HOST=odoo-db-super
       - USER=odoo
       - PASSWORD_FILE=/run/secrets/postgresql_password
       - DB_NAME=odoo17
-      - VIRTUAL_HOST=v17.super.copromanager.pro
-      - LETSENCRYPT_HOST=v17.super.copromanager.pro
-      - LETSENCRYPT_EMAIL=dbtevolution@gmail.com
       - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
     volumes:
       - odoo17-web-data:/var/lib/odoo
       - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
+      - ./logs:/var/log/odoo/odoo/logs
+      - ./odoo_pg_pass:/run/secrets/postgresql_password:ro
     networks:
-      - odoo-network
-    secrets:
-      - postgresql_password
+      - super-network
+    depends_on:
+      db:
+        condition: service_healthy
     restart: always
 
   odoo18:
-    image: odoo:latest
+    image: odoo:18.0
     container_name: odoo18-web
     environment:
+      - VIRTUAL_HOST=v8.sup.copromanager.pro
+      - LETSENCRYPT_HOST=v8.sup.copromanager.pro
       - VIRTUAL_PORT=8069
-      - HOST=odoo-db
+      - VIRTUAL_PROTO=http
+      - HOST=odoo-db-super
       - USER=odoo
       - PASSWORD_FILE=/run/secrets/postgresql_password
       - DB_NAME=odoo18
-      - VIRTUAL_HOST=super.copromanager.pro,www.super.copromanager.pro
-      - LETSENCRYPT_HOST=super.copromanager.pro,www.super.copromanager.pro
-      - LETSENCRYPT_EMAIL=dbtevolution@gmail.com
       - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
     volumes:
       - odoo18-web-data:/var/lib/odoo
       - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
+      - ./logs:/var/log/odoo/odoo/logs
+      - ./odoo_pg_pass:/run/secrets/postgresql_password:ro
     networks:
-      - odoo-network
-    secrets:
-      - postgresql_password
+      - super-network
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+
+  odoo_the:
+    image: odoo:latest
+    container_name: odoo_latest-the-web
+    environment:
+      - VIRTUAL_HOST=t.copromanager.pro,www.t.copromanager.pro
+      - LETSENCRYPT_HOST=t.copromanager.pro,www.t.copromanager.pro
+      - VIRTUAL_PORT=8069
+      - VIRTUAL_PROTO=http
+      - HOST=odoo-db-super
+      - USER=odoo
+      - PASSWORD_FILE=/run/secrets/postgresql_password
+      - DB_NAME=odoo_the
+      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
+    volumes:
+      - odoo-the-web-data:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+      - ./logs:/var/log/odoo/odoo/logs
+      - ./odoo_pg_pass:/run/secrets/postgresql_password:ro
+    networks:
+      - super-network
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+
+  odoo_gestion:
+    image: odoo:latest
+    container_name: odoo_latest-gestion-web
+    environment:
+      - VIRTUAL_HOST=gesti.copromanager.pro,www.gesti.copromanager.pro
+      - LETSENCRYPT_HOST=gesti.copromanager.pro,www.gesti.copromanager.pro
+      - VIRTUAL_PORT=8069
+      - VIRTUAL_PROTO=http
+      - HOST=odoo-db-super
+      - USER=odoo
+      - PASSWORD_FILE=/run/secrets/postgresql_password
+      - DB_NAME=odoo_gestion
+      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
+    volumes:
+      - odoo-gestion-web-data:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+      - ./logs:/var/log/odoo/odoo/logs
+      - ./odoo_pg_pass:/run/secrets/postgresql_password:ro
+    networks:
+      - super-network
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+
+  odoo_super:
+    image: odoo:latest
+    container_name: odoo-latest-super-web
+    environment:
+      - VIRTUAL_HOST=sup.copromanager.pro,www.sup.copromanager.pro
+      - LETSENCRYPT_HOST=sup.copromanager.pro,www.sup.copromanager.pro
+      - VIRTUAL_PORT=8069
+      - VIRTUAL_PROTO=http
+      - HOST=odoo-db-super
+      - USER=odoo
+      - PASSWORD_FILE=/run/secrets/postgresql_password
+      - DB_NAME=odoo_super
+      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
+    volumes:
+      - odoo-super-web-data:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+      - ./logs:/var/log/odoo/odoo/logs
+      - ./odoo_pg_pass:/run/secrets/postgresql_password:ro
+    networks:
+      - super-network
+    depends_on:
+      db:
+        condition: service_healthy
     restart: always
 
   odoo_latest:
     image: odoo:latest
     container_name: odoo-latest-web
     environment:
+      - VIRTUAL_HOST=lat.copromanager.pro,www.lat.copromanager.pro
+      - LETSENCRYPT_HOST=lat.copromanager.pro,www.lat.copromanager.pro
       - VIRTUAL_PORT=8069
-      - HOST=odoo_db
+      - VIRTUAL_PROTO=http
+      - HOST=odoo-db-super
       - USER=odoo
       - PASSWORD_FILE=/run/secrets/postgresql_password
       - DB_NAME=odoo_latest
-      - VIRTUAL_HOST=gestion.copromanager.pro,www.gestion.copromanager.pro
-      - LETSENCRYPT_HOST=gestion.copromanager.pro,www.gestion.copromanager.pro
-      - LETSENCRYPT_EMAIL=dbtevolution@gmail.com
       - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
     volumes:
       - odoo-latest-web-data:/var/lib/odoo
       - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
+      - ./logs:/var/log/odoo/odoo/logs
+      - ./odoo_pg_pass:/run/secrets/postgresql_password:ro
     networks:
-      - odoo-network
-    secrets:
-      - postgresql_password
+      - super-network
+    depends_on:
+      db:
+        condition: service_healthy
     restart: always
 
 volumes:
-  odoo-db-data:
+  odoo-db-data-super:
   odoo16-web-data:
   odoo17-web-data:
   odoo18-web-data:
+  odoo-the-web-data:
+  odoo-gestion-web-data:
+  odoo-super-web-data:
   odoo-latest-web-data:
 
-secrets:
-  postgresql_password:
-    file: odoo_pg_pass
-
 networks:
-  odoo-network:
+  super-network:
     driver: bridge

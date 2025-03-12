@@ -1,6 +1,5 @@
 # /home/siisi/super/odoo/scratch/addons/copro_manager/models/__init__.py
 
-from . import superadmin
 from . import syndic
 from . import coproprietaire
 from . import prestataire

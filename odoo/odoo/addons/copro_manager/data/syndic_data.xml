@@ -12,8 +12,6 @@
         <field name="name">Syndic Alpha</field>
         <field name="email">alpha@syndic.com</field>
         <field name="phone">+123456789</field>
-        <!-- Reference the default superadmin -->
-        <field name="superadmin_id" ref="copro_manager.default_superadmin"/>
     </record>
 
     <!-- Define Syndic Beta -->
@@ -21,7 +19,5 @@
         <field name="name">Syndic Beta</field>
         <field name="email">beta@syndic.com</field>
         <field name="phone">+987654321</field>
-        <!-- Reference the default superadmin -->
-        <field name="superadmin_id" ref="copro_manager.default_superadmin"/>
     </record>
 </odoo>

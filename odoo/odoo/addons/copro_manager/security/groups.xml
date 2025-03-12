@@ -18,14 +18,12 @@
         <record id="group_coproprietaire" model="res.groups">
             <field name="name">Copropriétaire</field>
             <field name="category_id" ref="base.module_category_user_type"/>
-           <!--<field name="groups" eval="[(6, 0, [ref('copro_manager.group_coproprietaire')])]"/>-->
         </record>
 
         <!-- Group for Prestataires -->
         <record id="group_prestataire" model="res.groups">
             <field name="name">Prestataire</field>
             <field name="category_id" ref="base.module_category_user_type"/>
-            <!--<field name="groups" eval="[(6, 0, [ref('copro_manager.group_prestataire')])]"/>-->
         </record>
     </data>
 </odoo>

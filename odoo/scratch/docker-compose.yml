@@ -1,4 +1,4 @@
-#version: '3.7'
+# /home/siisi/super/odoo/scratch/docker-compose.yml
 
 services:
   db:
@@ -30,7 +30,7 @@ services:
       - HOST=odoo-db-local
       - POSTGRES_USER=odoo
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=odoo16
+      - DB_NAME=odoo16_local
       - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
     ports:
       - "8016:8069"
@@ -38,6 +38,7 @@ services:
       - odoo16-web-data-local:/var/lib/odoo
       - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
+      - ./logs:/var/log/odoo/scratch/logs
     networks:
       - odoo-network-local
     secrets:
@@ -55,7 +56,7 @@ services:
       - HOST=odoo-db-local
       - POSTGRES_USER=odoo
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=odoo17
+      - DB_NAME=odoo17_local
       - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
     ports:
       - "8017:8069"
@@ -63,6 +64,7 @@ services:
       - odoo17-web-data-local:/var/lib/odoo
       - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
+      - ./logs:/var/log/odoo/scratch/logs
     networks:
       - odoo-network-local
     secrets:
@@ -73,14 +75,14 @@ services:
         condition: service_healthy
 
   odoo18:
-    image: odoo:latest
+    image: odoo:18.0
     container_name: odoo18-web-local
     environment:
       - VIRTUAL_PORT=8069
       - HOST=odoo-db-local
       - POSTGRES_USER=odoo
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=odoo18
+      - DB_NAME=odoo18_local
       - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
     ports:
       - "8018:8069"
@@ -88,6 +90,59 @@ services:
       - odoo18-web-data-local:/var/lib/odoo
       - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
+      - ./logs:/var/log/odoo/scratch/logs
+    networks:
+      - odoo-network-local
+    secrets:
+      - postgresql_password
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+
+  odoo_gestion:
+    image: odoo:latest
+    container_name: odoo-gestion-web-local
+    environment:
+      - VIRTUAL_PORT=8069
+      - HOST=odoo-db-local
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
+      - DB_NAME=odoo_gestion_local
+      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
+    ports:
+      - "8011:8069"
+    volumes:
+      - odoo-gestion-web-data-local:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+      - ./logs:/var/log/odoo/scratch/logs
+    networks:
+      - odoo-network-local
+    secrets:
+      - postgresql_password
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+
+  odoo_super:
+    image: odoo:latest
+    container_name: odoo-super-web-local
+    environment:
+      - VIRTUAL_PORT=8069
+      - HOST=odoo-db-local
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
+      - DB_NAME=odoo_super_local
+      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
+    ports:
+      - "8013:8069"
+    volumes:
+      - odoo-super-web-data-local:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+      - ./logs:/var/log/odoo/scratch/logs
     networks:
       - odoo-network-local
     secrets:
@@ -105,14 +160,15 @@ services:
       - HOST=odoo-db-local
       - POSTGRES_USER=odoo
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=odoo_latest
+      - DB_NAME=odoo_latest_local
       - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
     ports:
-      - "8011:8069"
+      - "8015:8069"
     volumes:
       - odoo-latest-web-data-local:/var/lib/odoo
       - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
+      - ./logs:/var/log/odoo/scratch/logs
     networks:
       - odoo-network-local
     secrets:
@@ -127,6 +183,8 @@ volumes:
   odoo16-web-data-local:
   odoo17-web-data-local:
   odoo18-web-data-local:
+  odoo-gestion-web-data-local:
+  odoo-super-web-data-local:
   odoo-latest-web-data-local:
 
 secrets:

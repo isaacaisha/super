@@ -24,8 +24,7 @@ class Coproprietaire(models.Model):
                 'name': vals.get('name'),
                 'login': vals.get('email'),
                 'email': vals.get('email'),
-                # Default password
-                'password': 'siisi321',
+                'password': 'siisi321', # Default password
 
                 # Assign both the base internal user group and your custom group
                 'groups_id': [(6, 0, [
@@ -44,3 +43,11 @@ class Coproprietaire(models.Model):
         if self.env.user.has_group('copro_manager.group_coproprietaire'):
             return [('user_id', '=', self.env.user.id)]
         return []
+
+    # Override the search method to filter data according to user permissions
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
+        # Append the user-specific access rule
+        user_access = self._get_user_coproprietaire_access()
+        args += user_access
+        return super(Coproprietaire, self).search(args, offset, limit, order, count)
