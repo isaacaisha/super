@@ -37,17 +37,15 @@ class Coproprietaire(models.Model):
 
         return super(Coproprietaire, self).create(vals)
 
-    # Security rule to prevent modification
     @api.model
     def _get_user_coproprietaire_access(self):
+        """Restrict coproprietaire access to only their syndic."""
         if self.env.user.has_group('copro_manager.group_coproprietaire'):
-            return [('user_id', '=', self.env.user.id)]
+            return [('syndic_id.user_id', '=', self.env.user.id)]
         return []
 
-    # Override the search method to filter data according to user permissions
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
-        # Append the user-specific access rule
-        user_access = self._get_user_coproprietaire_access()
-        args += user_access
+        args += self._get_user_coproprietaire_access()
         return super(Coproprietaire, self).search(args, offset, limit, order, count)
+        

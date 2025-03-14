@@ -43,17 +43,14 @@ class Prestataire(models.Model):
 
         return super(Prestataire, self).create(vals)
 
-    # Security rule to prevent modification
     @api.model
     def _get_user_prestataire_access(self):
+        """Restrict prestataire access to only their syndic."""
         if self.env.user.has_group('copro_manager.group_prestataire'):
-            return [('user_id', '=', self.env.user.id)]
+            return [('syndic_id.user_id', '=', self.env.user.id)]
         return []
-        
-    # Override the search method to filter data according to user permissions
+
     @api.model
     def search(self, args, offset=0, limit=None, order=None, count=False):
-        # Append the user-specific access rule
-        user_access = self._get_user_prestataire_access()
-        args += user_access
+        args += self._get_user_prestataire_access()
         return super(Prestataire, self).search(args, offset, limit, order, count)

@@ -2,12 +2,6 @@
 
 <odoo>
     <data noupdate="1">
-        <!-- Group for Superadmins -->
-        <record id="group_superadmin" model="res.groups">
-            <field name="name">Superadmin</field>
-            <field name="category_id" ref="base.module_category_user_type"/>
-        </record>
-
         <!-- Group for Syndics -->
         <record id="group_syndic" model="res.groups">
             <field name="name">Syndic</field>

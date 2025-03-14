@@ -6,7 +6,7 @@
     <record id="copro_syndic_rule" model="ir.rule">
       <field name="name">Syndic Data Rule</field>
       <field name="model_id" ref="model_copro_syndic"/>
-      <field name="domain_force">[('user_id', '=', user.id)]</field>
+      <field name="domain_force">[(1, '=', 1)]</field> 
       <field name="groups" eval="[(6, 0, [ref('copro_manager.group_syndic')])]"/>
     </record>
 
@@ -14,7 +14,7 @@
     <record id="copro_coproprietaire_rule" model="ir.rule">
       <field name="name">Copropriétaire Data Rule</field>
       <field name="model_id" ref="model_copro_coproprietaire"/>
-      <field name="domain_force">[('user_id', '=', user.id)]</field>
+      <field name="domain_force">[(1, '=', 1)]</field>
       <field name="groups" eval="[(6, 0, [ref('copro_manager.group_coproprietaire')])]"/>
       <field name="perm_write" eval="False"/>
       <field name="perm_create" eval="False"/>
@@ -25,7 +25,7 @@
     <record id="copro_prestataire_rule" model="ir.rule">
       <field name="name">Prestataire Data Rule</field>
       <field name="model_id" ref="model_copro_prestataire"/>
-      <field name="domain_force">[('user_id', '=', user.id)]</field>
+      <field name="domain_force">[(1, '=', 1)]</field>
       <field name="groups" eval="[(6, 0, [ref('copro_manager.group_prestataire')])]"/>
       <field name="perm_write" eval="False"/>
       <field name="perm_create" eval="False"/>

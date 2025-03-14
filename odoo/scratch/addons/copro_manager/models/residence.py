@@ -3,6 +3,7 @@
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
 
+
 class Residence(models.Model):
     _name = 'copro.residence'
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -30,10 +31,10 @@ class Residence(models.Model):
         column2='syndic_id',
         tracking=True
     )
-    superadmin_ids = fields.Many2many(
+    superuser_ids = fields.Many2many(
         'res.users',
-        string='Super Admins',
-        relation='residence_superadmin_rel',
+        string='Super Users',
+        relation='residence_superuser_rel',
         column1='residence_id',
         column2='user_id',
         tracking=True

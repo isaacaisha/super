@@ -11,7 +11,7 @@
                     <!-- Quick search fields -->
                     <field name="name"/>
                     <field name="syndic_ids"/>
-                    <field name="superadmin_ids"/>
+                    <field name="superuser_ids"/>
                     
                     <!-- Predefined filters -->
                     <filter string="Recent" 
@@ -47,7 +47,7 @@
                     <field name="total_area"/>
                     <field name="construction_date"/>
                     <field name="syndic_ids" widget="many2many_tags"/>
-                    <field name="superadmin_ids" widget="many2many_tags"/>
+                    <field name="superuser_ids" widget="many2many_tags"/>
                     <field name="created_by" widget="many2one_avatar"/>
                     <field name="active" invisible="1"/>
                     <button name="toggle_active" 
@@ -81,7 +81,7 @@
                         <notebook>
                             <page string="Management">
                                 <field name="syndic_ids" widget="many2many_tags"/>
-                                <field name="superadmin_ids" widget="many2many_tags"/>
+                                <field name="superuser_ids" widget="many2many_tags"/>
                             </page>
                             
                             <page string="Address Details">

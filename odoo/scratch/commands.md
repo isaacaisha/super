@@ -25,7 +25,7 @@ docker exec -it odoo-db-local psql -U odoo -d postgres
 docker-compose exec odoo_latest_local /bin/bash
 
 # Run an Odoo command inside the odoo_latest container (for example, to update a module)
-docker-compose exec odoo_latest odoo -d odoo_latest_local -u crm_copromanager --stop-after-init
+docker-compose exec odoo_latest odoo -d odoo_latest_local -u copro_manager --stop-after-init
 docker-compose exec odoo_latest odoo -d odoo_latest_local -i base,web --stop-after-init
 # To update every installed module in your database
 docker-compose exec odoo_latest odoo -d odoo_latest_local -u all --stop-after-init
@@ -52,4 +52,7 @@ docker-compose up -d --force-recreate odoo_latest_local
 docker-compose exec db psql -U odoo -d odoo_latest_local
 
 # Create Module using scaffold method
-docker-compose exec odoo_latest odoo scaffold crm_copromanager /mnt/extra-addons/
+docker-compose exec odoo_latest odoo scaffold copro_manager /mnt/extra-addons/
+
+# Create all Odoo Modules for 'odoo_the' Database
+docker-compose run --rm odoo_the -d odoo_the -i base --stop-after-init

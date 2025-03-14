@@ -9,8 +9,9 @@
         <field name="arch" type="xml">
             <list string="Licenses">
                 <field name="name"/>
-                <field name="start_at"/>
-                <field name="end_at"/>
+                <field name="license_type"/>
+                <field name="license_start"/>
+                <field name="license_end"/>
             </list>
         </field>
     </record>
@@ -25,8 +26,9 @@
                 <sheet>
                     <group>
                         <field name="name"/>
-                        <field name="start_at"/>
-                        <field name="end_at"/>
+                        <field name="license_type" groups="base.group_system"/>
+                        <field name="license_start" groups="base.group_system"/>
+                        <field name="license_end" groups="base.group_system"/>
                     </group>
                 </sheet>
             </form>

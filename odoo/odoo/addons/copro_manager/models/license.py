@@ -9,16 +9,17 @@ class Licence(models.Model):
     _description = "License"
 
     name = fields.Char(string="Nom de Licence", required=True)
-    start_at = fields.Date(string="Début le:", required=True)
-    end_at = fields.Date(string="expire le:", required=True)
-
-    def get_syndic(self):
-        Syndic = self.env["copro.syndic"]  # ✅ Lazy import inside a method
-        return Syndic.search([])
+    license_type = fields.Selection([
+        ('standard', 'Standard'),
+        ('premium', 'Premium'),
+        ('pro', 'Pro'),
+    ], string="Type de Licence", required=True)
+    license_start = fields.Date(string="Début le:", required=True)
+    license_end = fields.Date(string="expire le:", required=True)
 
     @api.model
     def create(self, vals):
-        # Allow any Odoo superuser to create a license
         if not self.env.user._is_superuser():
             raise AccessError("Only an Odoo superuser can assign a license.")
         return super(Licence, self).create(vals)
+        

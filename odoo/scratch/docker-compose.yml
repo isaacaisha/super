@@ -100,6 +100,32 @@ services:
       db:
         condition: service_healthy
 
+  odoo_the:
+    image: odoo:latest
+    container_name: odoo-the-web-local
+    environment:
+      - VIRTUAL_PORT=8069
+      - HOST=odoo-db-local
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
+      - DB_NAME=odoo_the_local
+      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
+    ports:
+      - "8012:8069"
+    volumes:
+      - odoo-the-web-data-local:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./addons:/mnt/extra-addons
+      - ./logs:/var/log/odoo/scratch/logs
+    networks:
+      - odoo-network-local
+    secrets:
+      - postgresql_password
+    restart: always
+    depends_on:
+      db:
+        condition: service_healthy
+
   odoo_gestion:
     image: odoo:latest
     container_name: odoo-gestion-web-local
@@ -183,6 +209,7 @@ volumes:
   odoo16-web-data-local:
   odoo17-web-data-local:
   odoo18-web-data-local:
+  odoo-the-web-data-local:
   odoo-gestion-web-data-local:
   odoo-super-web-data-local:
   odoo-latest-web-data-local:

@@ -7,12 +7,21 @@
         <field name="category_id" ref="copro_manager.group_coproprietaire"/>
     </record>
 
-    <!-- Define Copropriétaire John Doe -->
+    <!-- Define Copropriétaire Delta -->
     <record id="copro_1" model="copro.coproprietaire">
-        <field name="name">John Doe</field>
-        <field name="email">john@copro.com</field>
-        <field name="phone">+543219876</field>
+        <field name="name">Copro Delta</field>
+        <field name="email">delta@copro.com</field>
+        <field name="phone">+12 345 678 919</field>
         <field name="address">127, rue du la Gloire</field>
         <field name="syndic_id" ref="copro_manager.syndic_1"/>
+    </record>
+
+    <!-- Define Copropriétaire Omega -->
+    <record id="copro_2" model="copro.coproprietaire">
+        <field name="name">Copro Omega</field>
+        <field name="email">omega@copro.com</field>
+        <field name="phone">+12 345 678 919</field>
+        <field name="address">19, Avenue du la Pitié</field>
+        <field name="syndic_id" ref="copro_manager.syndic_2"/>
     </record>
 </odoo>
