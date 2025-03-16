@@ -2,6 +2,12 @@
 
 <odoo>
     <data noupdate="1">
+        <!-- Group for Supersyndics -->
+        <record id="group_supersyndic" model="res.groups">
+            <field name="name">Supersyndic</field>
+            <field name="category_id" ref="base.module_category_extra"/>
+        </record>
+
         <!-- Group for Syndics -->
         <record id="group_syndic" model="res.groups">
             <field name="name">Syndic</field>

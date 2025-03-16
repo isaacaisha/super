@@ -11,7 +11,7 @@ class Residence(models.Model):
     _order = 'construction_date desc, name asc'
 
     name = fields.Char(string="Nom", required=True, tracking=True)
-    address = fields.Text(string="Adresse", required=True, unique=True)
+    address = fields.Text(string="Adresse", required=True)
     number_of_apartments = fields.Integer(string="Nombre d'appartements")
     total_area = fields.Float(string="Superficie Totale")
     construction_date = fields.Date(string="Date de Construction", tracking=True)
@@ -23,20 +23,28 @@ class Residence(models.Model):
     last_inspection_date = fields.Date(string="Date du Dernier Contrôle")
 
     # Relationships
-    syndic_ids = fields.Many2many(
-        'copro.syndic', 
-        string='Syndics',
-        relation='residence_syndic_rel',
-        column1='residence_id',
-        column2='syndic_id',
-        tracking=True
-    )
     superuser_ids = fields.Many2many(
         'res.users',
         string='Super Users',
         relation='residence_superuser_rel',
         column1='residence_id',
         column2='user_id',
+        tracking=True
+    )
+    supersyndic_ids = fields.Many2many(
+        'copro.supersyndic', 
+        string='Super Syndics',
+        relation='residence_supersyndic_rel',
+        column1='residence_id',
+        column2='supersyndic_id',
+        tracking=True
+    )
+    syndic_ids = fields.Many2many(
+        'copro.syndic', 
+        string='Syndics',
+        relation='residence_syndic_rel',
+        column1='residence_id',
+        column2='syndic_id',
         tracking=True
     )
     created_by = fields.Many2one(

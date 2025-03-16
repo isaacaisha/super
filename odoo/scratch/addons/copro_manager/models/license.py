@@ -21,5 +21,8 @@ class Licence(models.Model):
     def create(self, vals):
         if not self.env.user._is_superuser():
             raise AccessError("Only an Odoo superuser can assign a license.")
-        return super(Licence, self).create(vals)
+
+        # Create coproprietaire entry in the database
+        license = super(Licence, self).create(vals)
+        return license
         

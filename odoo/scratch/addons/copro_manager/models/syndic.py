@@ -14,14 +14,9 @@ class Syndic(models.Model):
     email = fields.Char(string="Email", unique=True)
     phone = fields.Char(string="Téléphone")
     address = fields.Text(string="Adresse")
+    
+    supersyndic_id = fields.Many2one('copro.supersyndic', string="Super Syndic Associé")
     user_id = fields.Many2one('res.users', string="User Account", ondelete='set null')
-    residence_ids = fields.Many2many(
-        'copro.residence',
-        relation='residence_syndic_rel',
-        column1='syndic_id',
-        column2='residence_id',
-        string='Managed Residences'
-    )
 
     # Fields for license creation
     license_type = fields.Selection([
@@ -33,23 +28,19 @@ class Syndic(models.Model):
     license_end = fields.Date(string="License End Date")
     license_id = fields.Many2one('copro.license', string="License")
 
+    residence_ids = fields.Many2many(
+        'copro.residence',
+        relation='residence_syndic_rel',
+        column1='syndic_id',
+        column2='residence_id',
+        string='Managed Residences'
+    )
+    
     @api.model
     def create(self, vals):
-        # Extract license details from the vals dictionary
-        license_type = vals.pop('license_type', None)
-        license_start = vals.pop('license_start', None)
-        license_end = vals.pop('license_end', None)
-        existing_license_id = vals.get('license_id')
-
-        # Validate license inputs: Check if both an existing license and new license details are provided
-        new_license_details = any([license_type, license_start, license_end])
-        if existing_license_id and new_license_details:
-            raise ValidationError("Cannot set both an existing license and new license details.")
-        if new_license_details and not all([license_type, license_start, license_end]):
-            raise ValidationError("All license details (Type, Start, End) are required.")
-
         # Create user for syndic if email is provided
         if vals.get('email'):
+
             user_vals = {
                 'name': vals.get('name'),
                 'login': vals.get('email'),
@@ -65,17 +56,4 @@ class Syndic(models.Model):
 
         # Create syndic entry in the database
         syndic = super(Syndic, self).create(vals)
-
-        # Create a new license if new license details were provided
-        if new_license_details:
-            license_vals = {
-                'name': f"License for {syndic.name}",
-                'license_type': license_type,
-                'start_at': license_start,
-                'end_at': license_end,
-            }
-            # Create a new license and associate it with the syndic
-            license = self.env['copro.license'].create(license_vals)
-            syndic.license_id = license.id
-
         return syndic

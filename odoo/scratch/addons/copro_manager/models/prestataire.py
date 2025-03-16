@@ -20,7 +20,8 @@ class Prestataire(models.Model):
         ('other', 'Autre'),
     ], string="Type de Service", required=True)
 
-    syndic_id = fields.Many2one("copro.syndic", string="Syndic Responsable", required=True)
+    supersyndic_id = fields.Many2one('copro.supersyndic', string="Super Syndic Responsable")
+    syndic_id = fields.Many2one("copro.syndic", string="Syndic Responsable")
     user_id = fields.Many2one('res.users', string="Utilisateur", readonly=True, ondelete='cascade')
 
     @api.model
@@ -41,12 +42,16 @@ class Prestataire(models.Model):
             user = self.env['res.users'].sudo().create(user_vals)
             vals['user_id'] = user.id
 
-        return super(Prestataire, self).create(vals)
+        # Create prestataire entry in the database
+        prestataire = super(Prestataire, self).create(vals)
+        return prestataire
 
     @api.model
     def _get_user_prestataire_access(self):
-        """Restrict prestataire access to only their syndic."""
+        """Restrict prestataire access to only their supersyndic & syndic."""
         if self.env.user.has_group('copro_manager.group_prestataire'):
+            return [('superyndic_id.user_id', '=', self.env.user.id)]
+        elif self.env.user.has_group('copro_manager.group_prestataire'):
             return [('syndic_id.user_id', '=', self.env.user.id)]
         return []
 

@@ -12,6 +12,7 @@
                 <field name="email"/>
                 <field name="phone"/>
                 <field name="service_type"/>
+                <field name="supersyndic_id"/>
                 <field name="syndic_id"/>
             </list>
         </field>
@@ -31,6 +32,7 @@
                         <field name="phone"/>
                         <field name="address"/>
                         <field name="service_type"/>
+                        <field name="supersyndic_id"/>
                         <field name="syndic_id"/>
                     </group>
                 </sheet>

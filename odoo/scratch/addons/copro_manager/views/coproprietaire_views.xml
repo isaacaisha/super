@@ -12,6 +12,8 @@
                 <field name="email"/>
                 <field name="phone"/>
                 <field name="address"/>
+                <field name="supersyndic_id"/>
+                <field name="syndic_id"/>
             </list>
         </field>
     </record>
@@ -29,6 +31,7 @@
                         <field name="email"/>
                         <field name="phone"/>
                         <field name="address"/>
+                        <field name="supersyndic_id"/>
                         <field name="syndic_id"/>
                     </group>
                 </sheet>

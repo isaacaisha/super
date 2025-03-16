@@ -56,3 +56,5 @@ docker-compose exec odoo_latest odoo scaffold copro_manager /mnt/extra-addons/
 
 # Create all Odoo Modules for 'odoo_the' Database
 docker-compose run --rm odoo_the -d odoo_the -i base --stop-after-init
+
+docker-compose down && docker-compose up -d odoo_gestion

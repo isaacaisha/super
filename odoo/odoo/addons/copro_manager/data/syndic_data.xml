@@ -12,6 +12,7 @@
         <field name="name">Syndic Alpha</field>
         <field name="email">alpha@syndic.com</field>
         <field name="phone">+12 345 678 919</field>
+        <field name="supersyndic_id" ref="copro_manager.supersyndic_1"/>
     </record>
 
     <!-- Define Syndic Beta -->
@@ -19,5 +20,6 @@
         <field name="name">Syndic Beta</field>
         <field name="email">beta@syndic.com</field>
         <field name="phone">+98 765 432 991</field>
+        <field name="supersyndic_id" ref="copro_manager.supersyndic_2"/>
     </record>
 </odoo>
