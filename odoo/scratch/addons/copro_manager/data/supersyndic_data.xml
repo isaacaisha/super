@@ -10,7 +10,7 @@
     <!-- Define Supersyndic Boss -->
     <record id="supersyndic_1" model="copro.supersyndic">
         <field name="name">Super Syndic Boss</field>
-        <field name="email">alpha@supersyndic.com</field>
+        <field name="email">boss@supersyndic.com</field>
         <field name="phone">+23 345 678 653</field>
     </record>
 

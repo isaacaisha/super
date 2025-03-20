@@ -9,13 +9,14 @@ class Coproprietaire(models.Model):
     _description = 'Copropriétaire'
 
     name = fields.Char(string="Nom", required=True)
-    email = fields.Char(string="Email", unique=True)
+    email = fields.Char(string="Email")
     phone = fields.Char(string="Téléphone")
     address = fields.Text(string="Adresse")
 
     supersyndic_id = fields.Many2one('copro.supersyndic', string="Super Syndic Associé")
     syndic_id = fields.Many2one('copro.syndic', string="Syndic Associé", required=True)
-    # Add this field to link to a user
+    residence_id = fields.Many2one('copro.residence', string="Residence")
+    apartment_id = fields.Many2one('copro.apartment', string="Apartment")
     user_id = fields.Many2one('res.users', string="Utilisateur", readonly=True, ondelete='cascade')
 
     @api.model
@@ -34,23 +35,8 @@ class Coproprietaire(models.Model):
                 ])],
             }
             user = self.env['res.users'].sudo().create(user_vals)
-            vals['user_id'] = user.id
+            vals['user_id'] = user.id  # Link user to coproprietaire
 
         # Create coproprietaire entry in the database
         coproprietaire = super(Coproprietaire, self).create(vals)
         return coproprietaire
-
-    @api.model
-    def _get_user_coproprietaire_access(self):
-        """Restrict coproprietaire access to only their supersyndic & syndic."""
-        if self.env.user.has_group('copro_manager.group_coproprietaire'):
-            return [('supersyndic_id.user_id', '=', self.env.user.id)]
-        if self.env.user.has_group('copro_manager.group_coproprietaire'):
-            return [('syndic_id.user_id', '=', self.env.user.id)]
-        return []
-
-    @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        args += self._get_user_coproprietaire_access()
-        return super(Coproprietaire, self).search(args, offset, limit, order, count)
-        

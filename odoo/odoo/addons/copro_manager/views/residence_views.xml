@@ -12,7 +12,7 @@
                     <field name="name"/>
                     <!--<button name="archive_action" type="object" icon="fa-archive" string="Archive"/>-->
 
-                    <field name="superuser_ids"/>
+                    <!--<field name="superuser_ids"/>-->
                     <field name="supersyndic_ids"/>
                     <field name="syndic_ids"/>
                     
@@ -36,7 +36,7 @@
             </field>
         </record>
 
-        <!-- Tree View for Residences -->
+        <!-- List View for Residences -->
         <record id="view_residence_list" model="ir.ui.view">
             <field name="name">residence.list</field>
             <field name="model">copro.residence</field>
@@ -49,7 +49,7 @@
                     <field name="number_of_apartments"/>
                     <field name="total_area"/>
                     <field name="construction_date"/>
-                    <field name="superuser_ids" widget="many2many_tags"/>
+                    <!--<field name="superuser_ids" widget="many2many_tags"/>-->
                     <field name="supersyndic_ids" widget="many2many_tags"/>
                     <field name="syndic_ids" widget="many2many_tags"/>
                     <field name="created_by" widget="many2one_avatar"/>
@@ -84,7 +84,7 @@
 
                         <notebook>
                             <page string="Management">
-                                <field name="superuser_ids" widget="many2many_tags"/>
+                                <!--<field name="superuser_ids" widget="many2many_tags"/>-->
                                 <field name="supersyndic_ids" widget="many2many_tags"/>
                                 <field name="syndic_ids" widget="many2many_tags"/>
                             </page>

@@ -60,7 +60,15 @@
             <field name="res_model">copro.residence</field>
             <field name="view_mode">list,form</field>
         </record>
-        <menuitem id="menu_residences" name="Residences" parent="menu_copro_manager_root" sequence="45"
+        <menuitem id="menu_residence" name="Residences" parent="menu_copro_manager_root" sequence="45"
                   action="action_residences_list"/>
+
+        <record id="action_apartment_list" model="ir.actions.act_window">
+            <field name="name">Apartments</field>
+            <field name="res_model">copro.apartment</field>
+            <field name="view_mode">list,form</field>
+        </record>
+        <menuitem id="menu_apartment" name="Apartments" parent="menu_copro_manager_root" sequence="50"
+                  action="action_apartment_list"/>
     </data>
 </odoo>

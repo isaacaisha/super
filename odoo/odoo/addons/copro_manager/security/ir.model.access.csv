@@ -33,4 +33,10 @@ access_copro_residence_syndic,access.residence,copro_manager.model_copro_residen
 access_copro_residence,access.copro.residence,copro_manager.model_copro_residence,copro_manager.group_coproprietaire,1,0,0,0
 access_presta_residence,access.presta.residence,copro_manager.model_copro_residence,copro_manager.group_prestataire,1,0,0,0
 
+access_apartment_superuser,Superuser Access to Apartment,copro_manager.model_copro_apartment,base.group_system,1,1,1,1
+access_apartment_supersyndic,Supersyndic Access to Apartment,copro_manager.model_copro_apartment,copro_manager.group_supersyndic,1,1,1,1
+access_apartment_syndic,Syndic Access to Apartment,copro_manager.model_copro_apartment,copro_manager.group_syndic,1,1,1,1
+access_apartment_copro,Co-owner Access to Apartment,copro_manager.model_copro_apartment,copro_manager.group_coproprietaire,1,0,0,0
+access_apartment_presta,Service Provider Access to Apartment,copro_manager.model_copro_apartment,copro_manager.group_prestataire,1,0,0,0
+
 access_license_user,access.license,copro_manager.model_copro_license,base.group_system,1,1,1,1

@@ -47,6 +47,14 @@ class Residence(models.Model):
         column2='syndic_id',
         tracking=True
     )
+    coproprietaire_ids = fields.Many2many(
+        'copro.coproprietaire', 
+        string='Coproprietaires',
+        relation='residence_coproprietaire_rel',
+        column1='residence_id',
+        column2='coproprietaire_id',
+        tracking=True
+    )
     created_by = fields.Many2one(
         'res.users', 
         string='Created By', 

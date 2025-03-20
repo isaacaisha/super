@@ -60,8 +60,8 @@ services:
     image: odoo:16.0
     container_name: odoo16-web
     environment:
-      - VIRTUAL_HOST=v6.sup.copromanager.pro
-      - LETSENCRYPT_HOST=v6.sup.copromanager.pro
+      - VIRTUAL_HOST=odoo16.siisi.online,www.odoo16.siisi.online
+      - LETSENCRYPT_HOST=odoo16.siisi.online,www.odoo16.siisi.online
       - VIRTUAL_PORT=8069
       - VIRTUAL_PROTO=http
       - HOST=odoo-db-super
@@ -86,8 +86,8 @@ services:
     image: odoo:17.0
     container_name: odoo17-web
     environment:
-      - VIRTUAL_HOST=v7.sup.copromanager.pro
-      - LETSENCRYPT_HOST=v7.sup.copromanager.pro
+      - VIRTUAL_HOST=odoo17.siisi.online,www.odoo17.siisi.online
+      - LETSENCRYPT_HOST=odoo17.siisi.online,www.odoo17.siisi.online
       - VIRTUAL_PORT=8069
       - VIRTUAL_PROTO=http
       - HOST=odoo-db-super
@@ -112,8 +112,8 @@ services:
     image: odoo:18.0
     container_name: odoo18-web
     environment:
-      - VIRTUAL_HOST=v8.sup.copromanager.pro
-      - LETSENCRYPT_HOST=v8.sup.copromanager.pro
+      - VIRTUAL_HOST=odoo18.siisi.online,www.odoo18.siisi.online
+      - LETSENCRYPT_HOST=odoo18.siisi.online,www.odoo18.siisi.online
       - VIRTUAL_PORT=8069
       - VIRTUAL_PROTO=http
       - HOST=odoo-db-super
@@ -134,21 +134,21 @@ services:
         condition: service_healthy
     restart: always
 
-  odoo_the:
+  gestion:
     image: odoo:latest
-    container_name: odoo_latest-the-web
+    container_name: gestion-web
     environment:
-      - VIRTUAL_HOST=t.copromanager.pro,www.t.copromanager.pro
-      - LETSENCRYPT_HOST=t.copromanager.pro,www.t.copromanager.pro
+      - VIRTUAL_HOST=gestion.siisi.online,www.gestion.siisi.online
+      - LETSENCRYPT_HOST=gestion.siisi.online,www.gestion.siisi.online
       - VIRTUAL_PORT=8069
       - VIRTUAL_PROTO=http
       - HOST=odoo-db-super
       - USER=odoo
       - PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=odoo_the
+      - DB_NAME=gestion
       - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
     volumes:
-      - odoo-the-web-data:/var/lib/odoo
+      - gestion-web-data:/var/lib/odoo
       - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
       - ./logs:/var/log/odoo/odoo/logs
@@ -160,21 +160,21 @@ services:
         condition: service_healthy
     restart: always
 
-  odoo_gestion:
+  dbt:
     image: odoo:latest
-    container_name: odoo_latest-gestion-web
+    container_name: dbt-web
     environment:
-      - VIRTUAL_HOST=gesti.copromanager.pro,www.gesti.copromanager.pro
-      - LETSENCRYPT_HOST=gesti.copromanager.pro,www.gesti.copromanager.pro
+      - VIRTUAL_HOST=dbt.siisi.online,www.dbt.siisi.online
+      - LETSENCRYPT_HOST=dbt.siisi.online,www.dbt.siisi.online
       - VIRTUAL_PORT=8069
       - VIRTUAL_PROTO=http
       - HOST=odoo-db-super
       - USER=odoo
       - PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=odoo_gestion
+      - DB_NAME=dbt
       - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
     volumes:
-      - odoo-gestion-web-data:/var/lib/odoo
+      - dbt-web-data:/var/lib/odoo
       - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
       - ./logs:/var/log/odoo/odoo/logs
@@ -186,21 +186,21 @@ services:
         condition: service_healthy
     restart: always
 
-  odoo_super:
+  evolution:
     image: odoo:latest
-    container_name: odoo-latest-super-web
+    container_name: evolution-web
     environment:
-      - VIRTUAL_HOST=sup.copromanager.pro,www.sup.copromanager.pro
-      - LETSENCRYPT_HOST=sup.copromanager.pro,www.sup.copromanager.pro
+      - VIRTUAL_HOST=evolution.siisi.online,www.evolution.siisi.online
+      - LETSENCRYPT_HOST=evolution.siisi.online,www.evolution.siisi.online
       - VIRTUAL_PORT=8069
       - VIRTUAL_PROTO=http
       - HOST=odoo-db-super
       - USER=odoo
       - PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=odoo_super
+      - DB_NAME=evolution
       - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
     volumes:
-      - odoo-super-web-data:/var/lib/odoo
+      - evolution-web-data:/var/lib/odoo
       - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
       - ./logs:/var/log/odoo/odoo/logs
@@ -212,21 +212,21 @@ services:
         condition: service_healthy
     restart: always
 
-  odoo_latest:
+  medusa:
     image: odoo:latest
-    container_name: odoo-latest-web
+    container_name: medusa-web
     environment:
-      - VIRTUAL_HOST=lat.copromanager.pro,www.lat.copromanager.pro
-      - LETSENCRYPT_HOST=lat.copromanager.pro,www.lat.copromanager.pro
+      - VIRTUAL_HOST=medusa.siisi.online,www.medusa.siisi.online
+      - LETSENCRYPT_HOST=medusa.siisi.online,www.medusa.siisi.online
       - VIRTUAL_PORT=8069
       - VIRTUAL_PROTO=http
       - HOST=odoo-db-super
       - USER=odoo
       - PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=odoo_latest
+      - DB_NAME=medusa
       - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
     volumes:
-      - odoo-latest-web-data:/var/lib/odoo
+      - medusa-web-data:/var/lib/odoo
       - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
       - ./logs:/var/log/odoo/odoo/logs
@@ -243,10 +243,10 @@ volumes:
   odoo16-web-data:
   odoo17-web-data:
   odoo18-web-data:
-  odoo-the-web-data:
-  odoo-gestion-web-data:
-  odoo-super-web-data:
-  odoo-latest-web-data:
+  gestion-web-data:
+  dbt-web-data:
+  evolution-web-data:
+  medusa-web-data:
 
 networks:
   super-network:

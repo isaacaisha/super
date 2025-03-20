@@ -11,7 +11,7 @@ class Supersyndic(models.Model):
 
     # Existing fields
     name = fields.Char(string="Nom du Super Syndic", required=True)
-    email = fields.Char(string="Email", unique=True)
+    email = fields.Char(string="Email")
     phone = fields.Char(string="Téléphone")
     address = fields.Text(string="Adresse")
     user_id = fields.Many2one('res.users', string="User Account", ondelete='set null')
@@ -22,6 +22,7 @@ class Supersyndic(models.Model):
         column2='residence_id',
         string='Managed Residences'
     )
+    apartment_id = fields.Many2one('copro.apartment', string="Apartment")
 
     # Fields for license creation
     license_type = fields.Selection([
@@ -50,6 +51,10 @@ class Supersyndic(models.Model):
 
         # Create user for supersyndic if email is provided
         if vals.get('email'):
+            # Check if a user with this email already exists
+            existing_user = self.env['res.users'].sudo().search([('login', '=', vals.get('email'))], limit=1)
+            if existing_user:
+                vals['user_id'] = existing_user.id
             user_vals = {
                 'name': vals.get('name'),
                 'login': vals.get('email'),

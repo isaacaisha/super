@@ -9,7 +9,7 @@ class Prestataire(models.Model):
     _description = "Prestataire"
 
     name = fields.Char(string="Nom", required=True)
-    email = fields.Char(string="Email", required=True, unique=True)
+    email = fields.Char(string="Email", required=True)
     phone = fields.Char(string="Téléphone")
     address = fields.Text(string="Adresse")
     service_type = fields.Selection([
@@ -21,13 +21,13 @@ class Prestataire(models.Model):
     ], string="Type de Service", required=True)
 
     supersyndic_id = fields.Many2one('copro.supersyndic', string="Super Syndic Responsable")
-    syndic_id = fields.Many2one("copro.syndic", string="Syndic Responsable")
+    syndic_id = fields.Many2one("copro.syndic", string="Syndic Responsable", required=True)
+    residence_ids = fields.Many2many('copro.residence', string="Associated Residences")
     user_id = fields.Many2one('res.users', string="Utilisateur", readonly=True, ondelete='cascade')
 
     @api.model
     def create(self, vals):
         if vals.get('email'):
-
             user_vals = {
                 'name': vals.get('name'),
                 'login': vals.get('email'),
@@ -40,22 +40,8 @@ class Prestataire(models.Model):
                 ])],
             }
             user = self.env['res.users'].sudo().create(user_vals)
-            vals['user_id'] = user.id
+            vals['user_id'] = user.id  # Link user to prestataire
 
         # Create prestataire entry in the database
         prestataire = super(Prestataire, self).create(vals)
         return prestataire
-
-    @api.model
-    def _get_user_prestataire_access(self):
-        """Restrict prestataire access to only their supersyndic & syndic."""
-        if self.env.user.has_group('copro_manager.group_prestataire'):
-            return [('superyndic_id.user_id', '=', self.env.user.id)]
-        elif self.env.user.has_group('copro_manager.group_prestataire'):
-            return [('syndic_id.user_id', '=', self.env.user.id)]
-        return []
-
-    @api.model
-    def search(self, args, offset=0, limit=None, order=None, count=False):
-        args += self._get_user_prestataire_access()
-        return super(Prestataire, self).search(args, offset, limit, order, count)

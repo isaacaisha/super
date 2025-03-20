@@ -2,7 +2,8 @@
 
 from . import supersyndic
 from . import syndic
-from . import coproprietaire
-from . import prestataire
 from . import license
 from . import residence
+from . import coproprietaire
+from . import prestataire
+from . import apartment

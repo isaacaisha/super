@@ -11,7 +11,7 @@ class Syndic(models.Model):
 
     # Existing fields
     name = fields.Char(string="Nom du Syndic", required=True)
-    email = fields.Char(string="Email", unique=True)
+    email = fields.Char(string="Email")
     phone = fields.Char(string="Téléphone")
     address = fields.Text(string="Adresse")
     
@@ -35,6 +35,7 @@ class Syndic(models.Model):
         column2='residence_id',
         string='Managed Residences'
     )
+    apartment_id = fields.Many2one('copro.apartment', string="Apartment")
     
     @api.model
     def create(self, vals):
@@ -45,14 +46,14 @@ class Syndic(models.Model):
                 'name': vals.get('name'),
                 'login': vals.get('email'),
                 'email': vals.get('email'),
-                'password': 'siisi321',  # Ensure to handle passwords securely
+                'password': 'siisi321',
                 'groups_id': [(6, 0, [
                     self.env.ref('base.group_user').id,
                     self.env.ref('copro_manager.group_syndic').id
                 ])],
             }
             user = self.env['res.users'].sudo().create(user_vals)
-            vals['user_id'] = user.id
+            vals['user_id'] = user.id  # Link user to syndic
 
         # Create syndic entry in the database
         syndic = super(Syndic, self).create(vals)
