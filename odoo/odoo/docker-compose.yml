@@ -4,7 +4,7 @@ services:
   # --- Reverse Proxy & SSL ---
   nginx-proxy:
     image: jwilder/nginx-proxy:latest
-    container_name: nginx-proxy-super
+    container_name: nginx-proxy
     ports:
       - "80:80"
       - "443:443"
@@ -14,16 +14,16 @@ services:
       - ./vhost.d:/etc/nginx/vhost.d
       - ./html:/usr/share/nginx/html
     networks:
-      - super-network
+      - siisi-network
     restart: always
 
   letsencrypt:
     image: jrcs/letsencrypt-nginx-proxy-companion:latest
-    container_name: nginx-letsencrypt-super
+    container_name: nginx-letsencrypt
     depends_on:
       - nginx-proxy
     environment:
-      - NGINX_PROXY_CONTAINER=nginx-proxy-super
+      - NGINX_PROXY_CONTAINER=nginx-proxy
       - DEFAULT_EMAIL=medusadbt@gmail.com
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
@@ -31,223 +31,65 @@ services:
       - ./vhost.d:/etc/nginx/vhost.d
       - ./html:/usr/share/nginx/html
     networks:
-      - super-network
+      - siisi-network
     restart: always
 
   # --- Database ---
   db:
     image: postgres:latest
-    container_name: odoo-db-super
+    container_name: odoo-db
     environment:
       - POSTGRES_USER=odoo
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
       - POSTGRES_DB=postgres
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - odoo-db-data-super:/var/lib/postgresql/data/pgdata
+      - odoo-db-data:/var/lib/postgresql/data/pgdata
       - ./odoo_pg_pass:/run/secrets/postgresql_password:ro
     networks:
-      - super-network
+      - siisi-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U odoo"]
+      test: ["CMD-SHELL", "pg_isready -U odoo -d postgres"]
       interval: 5s
       timeout: 5s
       retries: 5
     restart: always
 
   # --- Odoo Services ---
-  odoo16:
-    image: odoo:16.0
-    container_name: odoo16-web
-    environment:
-      - VIRTUAL_HOST=odoo16.siisi.online,www.odoo16.siisi.online
-      - LETSENCRYPT_HOST=odoo16.siisi.online,www.odoo16.siisi.online
-      - VIRTUAL_PORT=8069
-      - VIRTUAL_PROTO=http
-      - HOST=odoo-db-super
-      - USER=odoo
-      - PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=odoo16
-      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
-    volumes:
-      - odoo16-web-data:/var/lib/odoo
-      - ./config:/etc/odoo
-      - ./addons:/mnt/extra-addons
-      - ./logs:/var/log/odoo/odoo/logs
-      - ./odoo_pg_pass:/run/secrets/postgresql_password:ro
-    networks:
-      - super-network
-    depends_on:
-      db:
-        condition: service_healthy
-    restart: always
-
-  odoo17:
-    image: odoo:17.0
-    container_name: odoo17-web
-    environment:
-      - VIRTUAL_HOST=odoo17.siisi.online,www.odoo17.siisi.online
-      - LETSENCRYPT_HOST=odoo17.siisi.online,www.odoo17.siisi.online
-      - VIRTUAL_PORT=8069
-      - VIRTUAL_PROTO=http
-      - HOST=odoo-db-super
-      - USER=odoo
-      - PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=odoo17
-      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
-    volumes:
-      - odoo17-web-data:/var/lib/odoo
-      - ./config:/etc/odoo
-      - ./addons:/mnt/extra-addons
-      - ./logs:/var/log/odoo/odoo/logs
-      - ./odoo_pg_pass:/run/secrets/postgresql_password:ro
-    networks:
-      - super-network
-    depends_on:
-      db:
-        condition: service_healthy
-    restart: always
-
-  odoo18:
-    image: odoo:18.0
-    container_name: odoo18-web
-    environment:
-      - VIRTUAL_HOST=odoo18.siisi.online,www.odoo18.siisi.online
-      - LETSENCRYPT_HOST=odoo18.siisi.online,www.odoo18.siisi.online
-      - VIRTUAL_PORT=8069
-      - VIRTUAL_PROTO=http
-      - HOST=odoo-db-super
-      - USER=odoo
-      - PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=odoo18
-      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
-    volumes:
-      - odoo18-web-data:/var/lib/odoo
-      - ./config:/etc/odoo
-      - ./addons:/mnt/extra-addons
-      - ./logs:/var/log/odoo/odoo/logs
-      - ./odoo_pg_pass:/run/secrets/postgresql_password:ro
-    networks:
-      - super-network
-    depends_on:
-      db:
-        condition: service_healthy
-    restart: always
-
-  gestion:
+  siisi:
     image: odoo:latest
-    container_name: gestion-web
+    container_name: siisi
     environment:
-      - VIRTUAL_HOST=gestion.siisi.online,www.gestion.siisi.online
-      - LETSENCRYPT_HOST=gestion.siisi.online,www.gestion.siisi.online
+      - VIRTUAL_HOST=siisi.online,www.siisi.online
+      - LETSENCRYPT_HOST=siisi.online,www.siisi.online
       - VIRTUAL_PORT=8069
       - VIRTUAL_PROTO=http
-      - HOST=odoo-db-super
+      - HOST=db
       - USER=odoo
       - PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=gestion
+      - DB_NAME=siisi
       - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
     volumes:
-      - gestion-web-data:/var/lib/odoo
+      - siisi-data:/var/lib/odoo
       - ./config:/etc/odoo
       - ./addons:/mnt/extra-addons
-      - ./logs:/var/log/odoo/odoo/logs
+      - ./logs:/var/log/odoo
       - ./odoo_pg_pass:/run/secrets/postgresql_password:ro
     networks:
-      - super-network
-    depends_on:
-      db:
-        condition: service_healthy
-    restart: always
-
-  dbt:
-    image: odoo:latest
-    container_name: dbt-web
-    environment:
-      - VIRTUAL_HOST=dbt.siisi.online,www.dbt.siisi.online
-      - LETSENCRYPT_HOST=dbt.siisi.online,www.dbt.siisi.online
-      - VIRTUAL_PORT=8069
-      - VIRTUAL_PROTO=http
-      - HOST=odoo-db-super
-      - USER=odoo
-      - PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=dbt
-      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
-    volumes:
-      - dbt-web-data:/var/lib/odoo
-      - ./config:/etc/odoo
-      - ./addons:/mnt/extra-addons
-      - ./logs:/var/log/odoo/odoo/logs
-      - ./odoo_pg_pass:/run/secrets/postgresql_password:ro
-    networks:
-      - super-network
-    depends_on:
-      db:
-        condition: service_healthy
-    restart: always
-
-  evolution:
-    image: odoo:latest
-    container_name: evolution-web
-    environment:
-      - VIRTUAL_HOST=evolution.siisi.online,www.evolution.siisi.online
-      - LETSENCRYPT_HOST=evolution.siisi.online,www.evolution.siisi.online
-      - VIRTUAL_PORT=8069
-      - VIRTUAL_PROTO=http
-      - HOST=odoo-db-super
-      - USER=odoo
-      - PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=evolution
-      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
-    volumes:
-      - evolution-web-data:/var/lib/odoo
-      - ./config:/etc/odoo
-      - ./addons:/mnt/extra-addons
-      - ./logs:/var/log/odoo/odoo/logs
-      - ./odoo_pg_pass:/run/secrets/postgresql_password:ro
-    networks:
-      - super-network
-    depends_on:
-      db:
-        condition: service_healthy
-    restart: always
-
-  medusa:
-    image: odoo:latest
-    container_name: medusa-web
-    environment:
-      - VIRTUAL_HOST=medusa.siisi.online,www.medusa.siisi.online
-      - LETSENCRYPT_HOST=medusa.siisi.online,www.medusa.siisi.online
-      - VIRTUAL_PORT=8069
-      - VIRTUAL_PROTO=http
-      - HOST=odoo-db-super
-      - USER=odoo
-      - PASSWORD_FILE=/run/secrets/postgresql_password
-      - DB_NAME=medusa
-      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
-    volumes:
-      - medusa-web-data:/var/lib/odoo
-      - ./config:/etc/odoo
-      - ./addons:/mnt/extra-addons
-      - ./logs:/var/log/odoo/odoo/logs
-      - ./odoo_pg_pass:/run/secrets/postgresql_password:ro
-    networks:
-      - super-network
+      - siisi-network
     depends_on:
       db:
         condition: service_healthy
     restart: always
 
 volumes:
-  odoo-db-data-super:
-  odoo16-web-data:
-  odoo17-web-data:
-  odoo18-web-data:
-  gestion-web-data:
-  dbt-web-data:
-  evolution-web-data:
-  medusa-web-data:
+  odoo-db-data:
+  siisi-data:
+
+secrets:
+  postgresql_password:
+    file: odoo_pg_pass
 
 networks:
-  super-network:
+  siisi-network:
     driver: bridge
