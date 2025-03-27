@@ -68,16 +68,16 @@ services:
       - USER=odoo
       - PASSWORD_FILE=/run/secrets/postgresql_password
       - DB_NAME=siisi
-      - ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
-      #- ADDONS_PATH=/mnt/custom-addons,/mnt/oca-addons,/usr/lib/python3/site-packages/odoo/addons
+      #- ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
+      - ADDONS_PATH=/mnt/custom-addons,/mnt/oca-addons,/usr/lib/python3/site-packages/odoo/addons
     volumes:
       - siisi-data:/var/lib/odoo
       - ./config:/etc/odoo
-      - ./addons:/mnt/extra-addons
-      - ./logs:/var/log/
-      #- ./custom-addons:/mnt/custom-addons
-      #- ./oca-addons:/mnt/oca-addons
-      #- ./logs:/var/log/siisi/siisi/logs
+      #- ./addons:/mnt/extra-addons
+      #- ./logs:/var/log/
+      - ./custom-addons:/mnt/custom-addons
+      - ./oca-addons:/mnt/oca-addons
+      - ./logs:/var/log/siisi/siisi/logs
       - ./odoo_pg_pass:/run/secrets/postgresql_password:ro
     networks:
       - siisi-network
