@@ -1,0 +1,23 @@
+<!-- /home/siisi/super/siisi/siisi/addons/copro_manager/data/supersyndic_data.xml -->
+
+<odoo>
+    <!-- Define the group 'group_supersyndic' -->
+    <record id="group_supersyndic" model="res.groups">
+        <field name="name">Super Syndic</field>
+        <field name="category_id" ref="copro_manager.group_supersyndic"/>
+    </record>
+
+    <!-- Define Supersyndic Boss -->
+    <record id="supersyndic_1" model="copro.supersyndic">
+        <field name="name">Super Syndic Boss</field>
+        <field name="email">boss@supersyndic.com</field>
+        <field name="phone">+23 345 678 653</field>
+    </record>
+
+    <!-- Define Supersyndic Jefa -->
+    <record id="supersyndic_2" model="copro.supersyndic">
+        <field name="name">Super Syndic Jefa</field>
+        <field name="email">jefa@supersyndic.com</field>
+        <field name="phone">+17 765 432 339</field>
+    </record>
+</odoo>
