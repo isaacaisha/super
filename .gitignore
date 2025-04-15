@@ -7,7 +7,7 @@ secrets/
 odoo/odoo/certs/
 
 config/*.conf
-odoo/odoo/config/odoo.conf
-odoo/odoo/odoo_pg_pass
-odoo/scratch/config/odoo.conf
-odoo/scratch/odoo_pg_pass
+siisi/siisi/config/odoo.conf
+siisi/siisi/odoo_pg_pass
+siisi/scratch/config/odoo.conf
+siisi/scratch/odoo_pg_pass
