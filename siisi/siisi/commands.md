@@ -22,7 +22,7 @@ docker ps
 
 <!-- Check logs -->
 docker-compose logs -f db      # PostgreSQL logs
-docker-compose logs -f siisi  # Odoo 16 logs
+docker-compose logs -f siisi  # Odoo latest logs
 
 <!-- Run Odoo into Docker bash -->
 docker exec -it odoo-web-1 odoo -i base -r odoo -w odoo

@@ -51,7 +51,9 @@ services:
   #      condition: service_healthy
 
   gestion_local:
-    image: odoo:latest
+    #image: odoo:latest
+    build: .
+    image: dockerfile-custom
     container_name: gestion-web-local
     environment:
       - VIRTUAL_PORT=8069
@@ -59,16 +61,13 @@ services:
       - POSTGRES_USER=odoo
       - POSTGRES_PASSWORD_FILE=/run/secrets/postgresql_password
       - DB_NAME=gestion_local
-      #- ADDONS_PATH=/mnt/extra-addons,/usr/lib/python3/site-packages/odoo/addons
-      #- ADDONS_PATH=/mnt/custom-addons,/usr/lib/python3/site-packages/odoo/addons
-      - ADDONS_PATH=/mnt/custom-addons,/mnt/oca-addons,/usr/lib/python3/site-packages/odoo/addons
+      - ADDONS_PATH=/mnt/custom-addons,/usr/lib/python3/site-packages/odoo/addons
     ports:
       - "8011:8069"
     volumes:
       - gestion-web-data-local:/var/lib/odoo
       - ./config:/etc/odoo
       - ./custom-addons:/mnt/custom-addons
-      - ./oca-addons:/mnt/oca-addons
       - ./logs:/var/log/siisi/scratch/logs
     networks:
       - odoo-network-local

@@ -1,13 +1,13 @@
 # /home/siisi/super/odoo/scratch/addons/copro_manager/__manifest__.py
 
 {
-    'name': 'Copro Manage',
+    'name': 'Property Management',
     'version': '1.0',
     #'version': '18.0.1.0.0',
     'category': 'Property Management',
     'summary': 'Gestion des copropriétés avec rôles et permissions',
     'author': 'Requin Tibùron',
-    'website': 'http://copromanage.pro',
+    'website': 'https://property.managemnt.online',
     'depends': ['base', 'mail'],
     'data': [
         'security/groups.xml',

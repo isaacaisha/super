@@ -32,8 +32,8 @@ docker-compose exec gestion_local /bin/bash
 docker-compose exec gestion_local odoo -d gestion_local -u copro_manager --stop-after-init
 # To update every installed module in your database
 docker-compose exec gestion_local odoo -d gestion_local -i base --stop-after-init
-docker-compose exec odoo16_local odoo -d odoo16_local -i base --stop-after-init
 docker-compose exec gestion_local odoo -d gestion_local -u all --stop-after-init
+docker-compose exec odoo16_local odoo -d odoo16_local -i base --stop-after-init
 docker-compose exec odoo16_local odoo -d odoo16_local -u all --stop-after-init
 
 # Remove a specific Docker volume (if not in use)
@@ -65,6 +65,12 @@ docker-compose run --rm gestion_local -d gestion_local -i base --stop-after-init
 
 # Stop and remove existing containers, networks, and volumes
 docker-compose down --volumes --remove-orphans
+docker stop $(docker ps -aq)
+docker rm $(docker ps -aq)
+# Remove All Images
+docker rmi -f $(docker images -aq)
+# Remove Docker System Data (Optional)
+docker system prune -a --volumes -f
 
 # Optionally prune unused volumes and networks
 docker volume prune -f
